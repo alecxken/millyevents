@@ -1,0 +1,36 @@
+name: Update Live Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update Live Server
+        env:
+          ALEX: ${{ secrets.ALEX }}
+        run: |
+          eval "$(ssh-agent -s)"
+          mkdir -p ~/.ssh
+          echo "$ALEX" | tr -d '\r' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-add ~/.ssh/deploy_key
+          ssh -o StrictHostKeyChecking=no root@saf.tenzatech.co.ke "
+            cd /var/www/events &&
+            git pull origin main &&
+            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction &&
+            npm install --ignore-scripts &&
+            npm run build &&
+            php artisan migrate --force &&
+            php artisan optimize:clear &&
+            php artisan config:cache &&
+            php artisan route:cache &&
+            php artisan view:cache
+          "
