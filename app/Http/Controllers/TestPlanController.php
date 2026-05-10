@@ -8,7 +8,7 @@ class TestPlanController extends Controller
 {
     public function index()
     {
-        $plans = TestPlan::where('user_id', Auth::id())->with('testCases')->orderByDesc('created_at')->get();
+        $plans = TestPlan::with('testCases')->orderByDesc('created_at')->get();
         return view('tests.index', compact('plans'));
     }
 
@@ -34,20 +34,20 @@ class TestPlanController extends Controller
 
     public function show(TestPlan $test)
     {
-        abort_unless($test->user_id === Auth::id(), 403);
+        abort_unless($test->user_id === Auth::id() || Auth::user()->is_admin, 403);
         $test->load(['testCases.results.user', 'testCases.latestResult']);
         return view('tests.show', compact('test'));
     }
 
     public function edit(TestPlan $test)
     {
-        abort_unless($test->user_id === Auth::id(), 403);
+        abort_unless($test->user_id === Auth::id() || Auth::user()->is_admin, 403);
         return view('tests.edit', compact('test'));
     }
 
     public function update(Request $request, TestPlan $test)
     {
-        abort_unless($test->user_id === Auth::id(), 403);
+        abort_unless($test->user_id === Auth::id() || Auth::user()->is_admin, 403);
         $data = $request->validate([
             'name'                 => 'required|string|max:255',
             'description'          => 'nullable|string',
@@ -67,7 +67,7 @@ class TestPlanController extends Controller
 
     public function destroy(TestPlan $test)
     {
-        abort_unless($test->user_id === Auth::id(), 403);
+        abort_unless($test->user_id === Auth::id() || Auth::user()->is_admin, 403);
         $test->delete();
         return redirect()->route('tests.index')->with('success', 'Test plan deleted.');
     }

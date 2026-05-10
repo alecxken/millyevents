@@ -9,7 +9,7 @@ class TestCaseController extends Controller
 {
     public function store(Request $request, TestPlan $test)
     {
-        abort_unless($test->user_id === Auth::id(), 403);
+        abort_unless($test->user_id === Auth::id() || Auth::user()->is_admin, 403);
         $data = $request->validate([
             'name'            => 'required|string|max:255',
             'description'     => 'nullable|string',
@@ -27,7 +27,7 @@ class TestCaseController extends Controller
 
     public function destroy(TestCase $testCase)
     {
-        abort_unless($testCase->testPlan->user_id === Auth::id(), 403);
+        abort_unless($testCase->testPlan->user_id === Auth::id() || Auth::user()->is_admin, 403);
         $testCase->delete();
         return back()->with('success', 'Test case deleted.');
     }

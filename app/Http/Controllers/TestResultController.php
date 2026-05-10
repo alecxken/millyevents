@@ -9,7 +9,7 @@ class TestResultController extends Controller
 {
     public function store(Request $request, TestCase $testCase)
     {
-        abort_unless($testCase->testPlan->user_id === Auth::id(), 403);
+        abort_unless($testCase->testPlan->user_id === Auth::id() || Auth::user()->is_admin, 403);
         $data = $request->validate([
             'status'        => 'required|in:pass,fail,blocked,not_tested',
             'actual_result' => 'nullable|string',
