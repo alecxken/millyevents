@@ -13,24 +13,61 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Update Live Server
-        env:
-          ALEX: ${{ secrets.ALEX }}
+      - name: Verify secret is set
         run: |
-          eval "$(ssh-agent -s)"
+          if [ -z "${{ secrets.ALEX }}" ]; then
+            echo "❌ ALEX secret is not set. Go to Settings → Secrets → Actions and add it."
+            exit 1
+          fi
+          echo "✅ ALEX secret found"
+
+      - name: Setup SSH key
+        run: |
           mkdir -p ~/.ssh
-          echo "$ALEX" | tr -d '\r' > ~/.ssh/deploy_key
+          echo "${{ secrets.ALEX }}" | tr -d '\r' > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-add ~/.ssh/deploy_key
-          ssh -o StrictHostKeyChecking=no root@saf.tenzatech.co.ke "
-            cd /var/www/events &&
-            git pull origin main &&
-            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction &&
-            npm install --ignore-scripts &&
-            npm run build &&
-            php artisan migrate --force &&
-            php artisan optimize:clear &&
-            php artisan config:cache &&
-            php artisan route:cache &&
+
+      - name: Test SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -o ConnectTimeout=15 \
+              -i ~/.ssh/deploy_key \
+              root@saf.tenzatech.co.ke "echo '✅ SSH connection successful'"
+
+      - name: Deploy to Live Server
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -o ConnectTimeout=30 \
+              -i ~/.ssh/deploy_key \
+              root@saf.tenzatech.co.ke bash << 'ENDSSH'
+            set -e
+            echo "→ Navigating to project..."
+            cd /var/www/events
+
+            echo "→ Pulling latest code from main..."
+            git pull origin main
+
+            echo "→ Installing PHP dependencies..."
+            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
+            echo "→ Installing Node dependencies..."
+            npm ci --ignore-scripts
+
+            echo "→ Building frontend assets..."
+            npm run build
+
+            echo "→ Running database migrations..."
+            php artisan migrate --force
+
+            echo "→ Clearing and caching config..."
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
             php artisan view:cache
-          "
+
+            echo "→ Fixing storage permissions..."
+            chown -R www-data:www-data storage bootstrap/cache
+            chmod -R 775 storage bootstrap/cache
+
+            echo "✅ Deployment complete!"
+          ENDSSH
