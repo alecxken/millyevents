@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{ session('theme','green') }}">
+<html lang="en" data-theme="{{ session('theme','blue') }}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07332c">
+<meta name="theme-color" content="#0d1f4a">
 <title>@yield('title','Milyvents') — Curated Experiences</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -11,19 +11,21 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @vite(['resources/css/app.css','resources/js/app.js'])
 <style>
-:root,[data-theme="green"]{
+:root,[data-theme="blue"]{
+  --forest:#0d1f4a;--olive:#0c3b6e;--sage:#5b8fa8;--gold:#0e6ba8;
+  --light:#c8daea;--cream:#edf4f9;--white:#ffffff;--dark:#071428;
+  --gold-lt:#b8d0e3;--gold-dk:#085580;--olive-lt:#c2d9e8;
+  --text:#0c1e35;--text-muted:#4a6b80;
+  --primary:var(--forest);--accent:var(--gold);--accent-lt:var(--gold-lt);
+  --border-col:rgba(91,143,168,.25);
+}
+[data-theme="green"]{
   --forest:#07332c;--olive:#485b46;--sage:#afb7ac;--gold:#bca879;
   --light:#ededed;--cream:#f7f4ef;--white:#ffffff;--dark:#0e1a18;
   --gold-lt:#e8dfc8;--gold-dk:#8a7550;--olive-lt:#cdd4cb;
   --text:#1a2420;--text-muted:#6b7c78;
   --primary:var(--forest);--accent:var(--gold);--accent-lt:var(--gold-lt);
   --border-col:rgba(175,183,172,.3);
-}
-[data-theme="blue"]{
-  --forest:#0a1f44;--olive:#0d3170;--sage:#5b8fa8;--gold:#0e6fa3;
-  --light:#d4e4ee;--cream:#edf4f9;--white:#ffffff;--dark:#071428;
-  --gold-lt:#d6eaf4;--gold-dk:#085580;--olive-lt:#c2d9e8;
-  --text:#0c1e35;--text-muted:#4a6b80;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);font-size:14px;overflow-x:hidden}

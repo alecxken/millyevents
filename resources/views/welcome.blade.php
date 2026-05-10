@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="green">
+<html lang="en" data-theme="blue">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07332c">
+<meta name="theme-color" content="#0d1f4a">
 <title>Milyvents — Curated Experiences</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 @vite(['resources/css/app.css','resources/js/app.js'])
 <style>
-:root{--forest:#07332c;--olive:#485b46;--sage:#afb7ac;--gold:#bca879;--light:#ededed;--cream:#f7f4ef;--white:#ffffff;--dark:#0e1a18;--gold-lt:#e8dfc8;--gold-dk:#8a7550;--olive-lt:#cdd4cb;--text:#1a2420;--text-muted:#6b7c78;}
+:root,[data-theme="blue"]{--forest:#0d1f4a;--olive:#0c3b6e;--sage:#5b8fa8;--gold:#0e6ba8;--light:#c8daea;--cream:#edf4f9;--white:#ffffff;--dark:#071428;--gold-lt:#b8d0e3;--gold-dk:#085580;--olive-lt:#c2d9e8;--text:#0c1e35;--text-muted:#4a6b80;}
+[data-theme="green"]{--forest:#07332c;--olive:#485b46;--sage:#afb7ac;--gold:#bca879;--light:#ededed;--cream:#f7f4ef;--white:#ffffff;--dark:#0e1a18;--gold-lt:#e8dfc8;--gold-dk:#8a7550;--olive-lt:#cdd4cb;--text:#1a2420;--text-muted:#6b7c78;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
@@ -19,7 +20,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
 /* NAV */
 #nav{position:fixed;top:0;left:0;right:0;z-index:900;transition:background .4s,box-shadow .3s;padding:0 48px;height:68px;display:flex;align-items:center;justify-content:space-between}
-#nav.scrolled{background:rgba(7,51,44,.96);backdrop-filter:blur(12px);box-shadow:0 2px 30px rgba(0,0,0,.2)}
+#nav.scrolled{background:rgba(13,31,74,.96);backdrop-filter:blur(12px);box-shadow:0 2px 30px rgba(0,0,0,.2)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo-mark{width:36px;height:36px;background:var(--gold);border-radius:50%;display:grid;place-items:center}
 .nav-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--white);letter-spacing:.12em;text-transform:uppercase}
@@ -72,7 +73,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .events-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;flex-wrap:wrap;gap:16px}
 .ev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .ev-card{background:var(--white);border:1px solid rgba(175,183,172,.3);border-radius:4px;overflow:hidden;cursor:pointer;transition:.3s;text-decoration:none;color:inherit;display:block}
-.ev-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(7,51,44,.12);border-color:var(--gold)}
+.ev-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(13,31,74,.12);border-color:var(--gold)}
 .ev-card-img{height:220px;background:var(--forest);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .ev-card-img-inner{width:100%;height:100%;background:linear-gradient(135deg,var(--forest) 0%,var(--olive) 100%);display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3}
 .ev-card-cat{position:absolute;top:14px;left:14px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:2px;background:var(--gold);color:var(--forest)}
@@ -114,7 +115,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
 /* NEWSLETTER */
 .newsletter{background:var(--gold-lt);padding:80px 0;text-align:center}
-.nl-form{display:flex;max-width:440px;margin:32px auto 0;border:1px solid rgba(7,51,44,.15);border-radius:3px;overflow:hidden;background:var(--white)}
+.nl-form{display:flex;max-width:440px;margin:32px auto 0;border:1px solid rgba(13,31,74,.15);border-radius:3px;overflow:hidden;background:var(--white)}
 .nl-form input{flex:1;padding:14px 18px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;background:transparent}
 .nl-form button{padding:14px 24px;background:var(--forest);color:var(--white);border:none;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:.2s;white-space:nowrap}
 .nl-form button:hover{background:var(--olive)}
@@ -135,7 +136,7 @@ footer{background:var(--dark);padding:64px 0 32px}
 .slots-fill{height:100%;border-radius:2px;background:var(--gold)}
 
 /* PWA Install Banner */
-#pwa-banner{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--forest);color:var(--white);padding:14px 24px;border-radius:4px;font-size:12px;font-weight:500;gap:12px;align-items:center;z-index:999;border:1px solid var(--gold);box-shadow:0 8px 32px rgba(7,51,44,.4)}
+#pwa-banner{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--forest);color:var(--white);padding:14px 24px;border-radius:4px;font-size:12px;font-weight:500;gap:12px;align-items:center;z-index:999;border:1px solid var(--gold);box-shadow:0 8px 32px rgba(13,31,74,.4)}
 #pwa-banner.show{display:flex}
 #pwa-banner button{padding:7px 16px;background:var(--gold);color:var(--forest);border:none;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 
@@ -153,7 +154,7 @@ footer{background:var(--dark);padding:64px 0 32px}
   <a href="/" class="nav-logo">
     <div class="nav-logo-mark">
       <svg viewBox="0 0 20 20" fill="none" width="20" height="20">
-        <path d="M10 2L3 8v10h5v-6h4v6h5V8z" fill="#07332c"/>
+        <path d="M10 2L3 8v10h5v-6h4v6h5V8z" fill="#0d1f4a"/>
       </svg>
     </div>
     <span class="nav-brand">Milyvents</span>
@@ -190,7 +191,7 @@ footer{background:var(--dark);padding:64px 0 32px}
           <circle cx="550" cy="80" r="2" fill="#bca879" opacity=".2"/>
         </svg>
       </div>
-      <div class="slide-overlay" style="background:linear-gradient(120deg,rgba(7,51,44,.88) 0%,rgba(7,51,44,.5) 50%,transparent 100%)"></div>
+      <div class="slide-overlay" style="background:linear-gradient(120deg,rgba(13,31,74,.88) 0%,rgba(13,31,74,.5) 50%,transparent 100%)"></div>
       <div class="slide-content">
         <div class="slide-tag">{{ $slide->tag }}</div>
         <h1 class="slide-headline serif">{{ $slide->headline }}</h1>
@@ -208,8 +209,8 @@ footer{background:var(--dark);padding:64px 0 32px}
     </div>
     @empty
     <div class="slide" style="width:100%">
-      <div class="slide-bg" style="background:#07332c"></div>
-      <div class="slide-overlay" style="background:rgba(7,51,44,.7)"></div>
+      <div class="slide-bg" style="background:#0d1f4a"></div>
+      <div class="slide-overlay" style="background:rgba(13,31,74,.7)"></div>
       <div class="slide-content">
         <div class="slide-tag">Welcome</div>
         <h1 class="slide-headline serif">Curated Events<br>For Those Who<br>Demand Excellence</h1>

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\TestPlan;
+use App\Models\TestResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -70,5 +71,30 @@ class TestPlanController extends Controller
         abort_unless($test->user_id === Auth::id() || Auth::user()->is_admin, 403);
         $test->delete();
         return redirect()->route('tests.index')->with('success', 'Test plan deleted.');
+    }
+
+    public function runAll(Request $request, TestPlan $test)
+    {
+        abort_unless($test->user_id === Auth::id() || Auth::user()->is_admin, 403);
+        $data = $request->validate([
+            'results'   => 'required|array',
+            'results.*' => 'in:pass,fail,blocked,not_tested',
+            'notes'     => 'nullable|array',
+            'notes.*'   => 'nullable|string|max:1000',
+        ]);
+        $caseIds = $test->testCases()->pluck('id')->toArray();
+        $count = 0;
+        foreach ($data['results'] as $caseId => $status) {
+            if (!in_array((int)$caseId, $caseIds)) continue;
+            TestResult::create([
+                'test_case_id' => $caseId,
+                'user_id'      => Auth::id(),
+                'status'       => $status,
+                'notes'        => $data['notes'][$caseId] ?? null,
+                'tested_at'    => now(),
+            ]);
+            $count++;
+        }
+        return back()->with('success', "{$count} test result(s) recorded.");
     }
 }
