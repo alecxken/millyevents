@@ -53,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tests/{test}', [TestPlanController::class, 'update'])->name('tests.update');
     Route::delete('/tests/{test}', [TestPlanController::class, 'destroy'])->name('tests.destroy');
 
+    // Bulk run all test cases
+    Route::post('/tests/{test}/run-all', [TestPlanController::class, 'runAll'])->name('tests.run-all');
+
     // Test Cases
     Route::post('/tests/{test}/cases', [TestCaseController::class, 'store'])->name('tests.cases.store');
     Route::delete('/test-cases/{testCase}', [TestCaseController::class, 'destroy'])->name('tests.cases.destroy');

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{ session('theme','green') }}">
+<html lang="en" data-theme="{{ session('theme','blue') }}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07332c">
+<meta name="theme-color" content="#0d1f4a">
 <title>@yield('title','Milyvents') — Curated Experiences</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -11,19 +11,21 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @vite(['resources/css/app.css','resources/js/app.js'])
 <style>
-:root,[data-theme="green"]{
+:root,[data-theme="blue"]{
+  --forest:#0d1f4a;--olive:#0c3b6e;--sage:#5b8fa8;--gold:#0e6ba8;
+  --light:#c8daea;--cream:#edf4f9;--white:#ffffff;--dark:#071428;
+  --gold-lt:#b8d0e3;--gold-dk:#085580;--olive-lt:#c2d9e8;
+  --text:#0c1e35;--text-muted:#4a6b80;
+  --primary:var(--forest);--accent:var(--gold);--accent-lt:var(--gold-lt);
+  --border-col:rgba(91,143,168,.25);
+}
+[data-theme="green"]{
   --forest:#07332c;--olive:#485b46;--sage:#afb7ac;--gold:#bca879;
   --light:#ededed;--cream:#f7f4ef;--white:#ffffff;--dark:#0e1a18;
   --gold-lt:#e8dfc8;--gold-dk:#8a7550;--olive-lt:#cdd4cb;
   --text:#1a2420;--text-muted:#6b7c78;
   --primary:var(--forest);--accent:var(--gold);--accent-lt:var(--gold-lt);
   --border-col:rgba(175,183,172,.3);
-}
-[data-theme="blue"]{
-  --forest:#0a1f44;--olive:#0d3170;--sage:#5b8fa8;--gold:#0e6fa3;
-  --light:#d4e4ee;--cream:#edf4f9;--white:#ffffff;--dark:#071428;
-  --gold-lt:#d6eaf4;--gold-dk:#085580;--olive-lt:#c2d9e8;
-  --text:#0c1e35;--text-muted:#4a6b80;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);font-size:14px;overflow-x:hidden}
@@ -82,7 +84,7 @@ table.tbl tbody tr:hover{background:#faf9f7}
 /* BUTTONS */
 .btn{padding:9px 18px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;border:none}
 .btn-primary{background:var(--forest);color:var(--white)}.btn-primary:hover{background:var(--olive)}
-.btn-gold{background:var(--gold);color:var(--forest)}.btn-gold:hover{background:var(--gold-dk);color:var(--white)}
+.btn-gold{background:var(--gold);color:var(--white)}.btn-gold:hover{background:var(--gold-dk);color:var(--white)}
 .btn-outline{background:transparent;border:1px solid var(--sage);color:var(--text-muted)}.btn-outline:hover{border-color:var(--forest);color:var(--forest)}
 .btn-danger{background:#faeae9;color:#b83c35}.btn-danger:hover{background:#b83c35;color:var(--white)}
 .btn-sm{padding:6px 12px;font-size:9px}
@@ -91,7 +93,7 @@ table.tbl tbody tr:hover{background:#faf9f7}
 .fld{margin-bottom:14px}
 .fld label{display:block;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
 .fld input,.fld select,.fld textarea{width:100%;padding:10px 13px;border:1.5px solid var(--light);border-radius:3px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:.2s;background:var(--cream)}
-.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 3px rgba(188,168,121,.1)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 3px rgba(14,107,168,.1)}
 .fld input::placeholder{color:var(--sage)}
 .fld-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 

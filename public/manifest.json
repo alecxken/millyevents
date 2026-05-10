@@ -4,8 +4,8 @@
   "description": "Africa's premier event management platform. Book events, take notes, manage test plans.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f4ef",
-  "theme_color": "#07332c",
+  "background_color": "#edf4f9",
+  "theme_color": "#0d1f4a",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "/icons/icon-72.png", "sizes": "72x72", "type": "image/png" },

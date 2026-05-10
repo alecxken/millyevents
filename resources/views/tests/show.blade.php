@@ -6,6 +6,9 @@
     <div><a href="{{ route('tests.index') }}" style="font-size:11px;color:var(--text-muted);text-decoration:none">← Test Plans</a></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <a href="{{ route('tests.edit',$test) }}" class="btn btn-outline btn-sm">Edit Plan</a>
+      @if($test->testCases->count())
+      <button class="btn btn-primary btn-sm" onclick="document.getElementById('run-all-modal').style.display='flex'">▶ Run All Tests</button>
+      @endif
       <a href="{{ route('pdf.test-plan',$test) }}" class="btn btn-gold btn-sm">📄 Export PDF</a>
     </div>
   </div>
@@ -109,7 +112,7 @@
 </div>
 
 <!-- Add Test Case Modal -->
-<div id="add-case-modal" style="display:none;position:fixed;inset:0;background:rgba(7,51,44,.6);z-index:2000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);overflow-y:auto">
+<div id="add-case-modal" style="display:none;position:fixed;inset:0;background:rgba(13,31,74,.6);z-index:2000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);overflow-y:auto">
   <div style="background:var(--white);border-radius:6px;width:100%;max-width:560px;margin:auto">
     <div style="background:var(--forest);padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
       <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">Add Test Case</div>
@@ -129,7 +132,7 @@
 </div>
 
 <!-- Record Result Modal -->
-<div id="result-modal" style="display:none;position:fixed;inset:0;background:rgba(7,51,44,.6);z-index:2000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
+<div id="result-modal" style="display:none;position:fixed;inset:0;background:rgba(13,31,74,.6);z-index:2000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
   <div style="background:var(--white);border-radius:6px;width:100%;max-width:440px">
     <div style="background:var(--forest);padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
       <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">Record Test Result</div>
@@ -140,15 +143,60 @@
       <div class="fld">
         <label>Result Status *</label>
         <select name="status">
-          <option value="pass">✅ Pass</option>
-          <option value="fail">❌ Fail</option>
-          <option value="blocked">🚧 Blocked</option>
-          <option value="not_tested">⬜ Not Tested</option>
+          <option value="pass">Pass</option>
+          <option value="fail">Fail</option>
+          <option value="blocked">Blocked</option>
+          <option value="not_tested">Not Tested</option>
         </select>
       </div>
       <div class="fld"><label>Actual Result</label><textarea name="actual_result" rows="2" placeholder="What actually happened?"></textarea></div>
       <div class="fld"><label>Notes</label><textarea name="notes" rows="2" placeholder="Additional notes…"></textarea></div>
       <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center">Save Result</button>
+    </form>
+  </div>
+</div>
+
+<!-- Run All Tests Modal -->
+<div id="run-all-modal" style="display:none;position:fixed;inset:0;background:rgba(13,31,74,.65);z-index:2000;align-items:flex-start;justify-content:center;padding:24px;backdrop-filter:blur(8px);overflow-y:auto">
+  <div style="background:var(--white);border-radius:6px;width:100%;max-width:680px;margin:auto">
+    <div style="background:var(--forest);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-radius:6px 6px 0 0">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">Run All Tests</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:2px">Set a result for each test case and submit all at once</div>
+      </div>
+      <button onclick="document.getElementById('run-all-modal').style.display='none'" style="background:rgba(255,255,255,.08);border:none;border-radius:50%;width:28px;height:28px;color:rgba(255,255,255,.6);cursor:pointer;font-size:18px">×</button>
+    </div>
+    <form method="POST" action="{{ route('tests.run-all',$test) }}" style="padding:20px 24px">
+      @csrf
+      <div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase">Quick set all:</span>
+        <button type="button" onclick="setAllStatus('pass')" class="btn btn-sm" style="background:#e8f4ec;color:#2a7040;border:none">All Pass</button>
+        <button type="button" onclick="setAllStatus('fail')" class="btn btn-sm" style="background:#faeae9;color:#b83c35;border:none">All Fail</button>
+        <button type="button" onclick="setAllStatus('blocked')" class="btn btn-sm" style="background:#fef9ec;color:#8a5a00;border:none">All Blocked</button>
+        <button type="button" onclick="setAllStatus('not_tested')" class="btn btn-sm" style="background:var(--light);color:#888;border:none">All Not Tested</button>
+      </div>
+      <div style="border:1px solid var(--border-col);border-radius:4px;overflow:hidden">
+        @foreach($test->testCases as $i => $case)
+        <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 16px;{{ !$loop->last ? 'border-bottom:1px solid var(--border-col);' : '' }}background:{{ $loop->even ? 'var(--cream)' : 'var(--white)' }}">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--forest)">
+              <span style="color:var(--text-muted);font-weight:400;margin-right:6px">TC{{ str_pad($i+1,2,'0',STR_PAD_LEFT) }}</span>{{ $case->name }}
+              <span class="badge {{ $case->priority==='critical'?'badge-red':($case->priority==='high'?'badge-gold':'badge-muted') }}" style="margin-left:6px">{{ $case->priority }}</span>
+            </div>
+            @if($case->latestResult)
+            <div style="font-size:10px;color:var(--text-muted);margin-top:3px">Last: <span class="badge result-{{ $case->latestResult->status }}" style="font-size:9px">{{ str_replace('_',' ',$case->latestResult->status) }}</span></div>
+            @endif
+          </div>
+          <select name="results[{{ $case->id }}]" class="run-status-select" style="padding:7px 10px;border:1.5px solid var(--light);border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);background:var(--white);cursor:pointer" onchange="styleSelect(this)">
+            <option value="pass" {{ $case->latestResult?->status === 'pass' ? 'selected' : '' }}>Pass</option>
+            <option value="fail" {{ $case->latestResult?->status === 'fail' ? 'selected' : '' }}>Fail</option>
+            <option value="blocked" {{ $case->latestResult?->status === 'blocked' ? 'selected' : '' }}>Blocked</option>
+            <option value="not_tested" {{ (!$case->latestResult || $case->latestResult?->status === 'not_tested') ? 'selected' : '' }}>Not Tested</option>
+          </select>
+        </div>
+        @endforeach
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:20px;padding:12px">Submit All Results</button>
     </form>
   </div>
 </div>
@@ -159,5 +207,16 @@ function openResult(caseId) {
   document.getElementById('result-form').action = `/test-cases/${caseId}/results`;
   document.getElementById('result-modal').style.display = 'flex';
 }
+function setAllStatus(status) {
+  document.querySelectorAll('.run-status-select').forEach(function(sel) {
+    sel.value = status;
+    styleSelect(sel);
+  });
+}
+function styleSelect(sel) {
+  const colors = {pass:'#2a7040',fail:'#b83c35',blocked:'#8a5a00',not_tested:'#888'};
+  sel.style.color = colors[sel.value] || 'var(--text)';
+}
+document.querySelectorAll('.run-status-select').forEach(styleSelect);
 </script>
 @endsection
