@@ -21,6 +21,19 @@ jobs:
           fi
           echo "✅ ALEX secret found"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Build frontend assets on CI
+        run: |
+          npm ci
+          npm run build
+          echo "✅ Assets built successfully"
+          ls -lh public/build/
+
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
@@ -33,6 +46,14 @@ jobs:
               -o ConnectTimeout=15 \
               -i ~/.ssh/deploy_key \
               root@saf.tenzatech.co.ke "echo '✅ SSH connection successful'"
+
+      - name: Upload built assets to server
+        run: |
+          rsync -az --delete \
+            -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key" \
+            public/build/ \
+            root@saf.tenzatech.co.ke:/var/www/events/public/build/
+          echo "✅ Assets uploaded"
 
       - name: Deploy to Live Server
         run: |
@@ -62,12 +83,6 @@ jobs:
             echo "→ Installing PHP dependencies..."
             composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
-            echo "→ Installing Node dependencies..."
-            npm ci --ignore-scripts
-
-            echo "→ Building frontend assets..."
-            npm run build
-
             echo "→ Running database migrations..."
             php artisan migrate --force
 
@@ -78,7 +93,7 @@ jobs:
             php artisan view:cache
 
             echo "→ Fixing permissions..."
-            chown -R www-data:www-data storage bootstrap/cache
+            chown -R www-data:www-data storage bootstrap/cache public/build
             chmod -R 775 storage bootstrap/cache
 
             echo "✅ Deployment complete!"
